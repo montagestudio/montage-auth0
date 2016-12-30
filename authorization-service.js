@@ -160,7 +160,7 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
                     //TEMP fix until autho is sorted out
                     resolve(response);
                 }, false);
-
+                console.log("self.connectionDescriptor.http is ",self.connectionDescriptor.http);
                 request.open("POST", self.connectionDescriptor.http+"authenticate?include=organization,hubs.location", true);
                 request.setRequestHeader("Accept", "application/vnd.api+json");
                 request.send(
