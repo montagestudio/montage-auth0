@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "dependencies": {
         "montage-data": "montagestudio/montage-data",
-        "auth0-js": "~7.6.x"
+        "auth0-js": "~7.6.x",
+        "auth0-lock": "~10.7.x"
     }
 }

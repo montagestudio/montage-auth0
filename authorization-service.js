@@ -51,11 +51,45 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
         value: true
     },
     authorizationPanel: {
-        value: "ui/login.reel"
+        value: "ui/auth0-lock.reel"
     },
+    _auth0Lock: {
+        value: null
+    },
+    _connectionDescriptor: {
+        value: null
+    },
+    
+    /**
+     * Passes information necessary to Auth0 authorization API/libraries
+     *      name: standard ConnectionDescriptor property ("production", "development", etc...)
+     *      clientId:,{String} Required parameter. Your application's clientId in Auth0.
+     *      domain:  {String}: Required parameter. Your Auth0 domain. Usually your-account.auth0.com.
+     *      options:  {Object}: Optional parameter. Allows for the configuration of Lock's appearance and behavior. 
+     *                  See https://auth0.com/docs/libraries/lock/v10/customization for details.
+     * 
+     * enforces that.
+     *
+     * @class
+     * @extends external:Montage
+     */
+    connectionDescriptor: {
+        get: function() {
+            return this._connectionDescriptor;
+        },
+        set: function(value) {
+            this._connectionDescriptor = value;
+            if(this._connectionDescriptor.clientId && this._connectionDescriptor.auth0Domain) {
+                this._auth0Lock = new Auth0Lock(
+                    this._connectionDescriptor.clientId,
+                    this._connectionDescriptor.auth0Domain
+                    );
+            }
+        }
+    },
+
     loginWithCredentials: {
         value: function(username, password) {
-
 
             return new Promise(function(resolve, reject) {
 
@@ -90,6 +124,10 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
                 // loadAuth0equest.open("GET", "http://cdn.auth0.com/w2/auth0-7.6.0.min.js", true);
                 // loadAuth0equest.send();
                 // return;
+
+                //Web Lock from CDN
+                //<script src="http://cdn.auth0.com/js/lock/10.7.3/lock.min.js"></script>
+
                 
                 //Direct to MileZero
                 var request = new XMLHttpRequest();
@@ -114,6 +152,10 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
                     }
                     console.log(response);
                     response.organizationId = username;
+                    response.organization = {
+                        orgId: username
+                    };
+
                     //resolve({organizationId: username});
                     //TEMP fix until autho is sorted out
                     resolve(response);
