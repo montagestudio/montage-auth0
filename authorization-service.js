@@ -90,7 +90,7 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
 
     loginWithCredentials: {
         value: function(username, password) {
-
+            var self = this;
             return new Promise(function(resolve, reject) {
 
                 // //Direct to Auth0
@@ -161,7 +161,7 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
                     resolve(response);
                 }, false);
 
-                request.open("POST", "http://localhost:6789/api/authenticate?include=organization,hubs.location", true);
+                request.open("POST", self.connectionDescriptor.http+"authenticate?include=organization,hubs.location", true);
                 request.setRequestHeader("Accept", "application/vnd.api+json");
                 request.send(
                     JSON.stringify({
