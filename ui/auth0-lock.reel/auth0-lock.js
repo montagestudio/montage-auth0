@@ -33,11 +33,16 @@ exports.Auth0Lock = AuthorizationPanel.specialize({
                         return;
                     }
 
+                    self.authorizationManagerPanel.approveAuthorization(profile);
+
                     localStorage.setItem('auth0IdToken', authResult.idToken);
                     localStorage.setItem('auth0Profile', JSON.stringify(profile));
+
+                    self.isAuthenticated = true;
+                    self.needsDraw = true;
+
                 });
 
-                self.authorizationManagerPanel.approveAuthorization(authResult);
 
             });
             this.needsDraw = true;
@@ -46,28 +51,14 @@ exports.Auth0Lock = AuthorizationPanel.specialize({
 
     draw: {
         value: function() {
-          this._auth0Lock.show();
+          this.isAuthenticated
+          ? this._auth0Lock.hide()
+          : this._auth0Lock.show();
         }
-    },
-
-    _isAuthenticated: {
-        value: false
     },
 
     isAuthenticated: {
-        get: function () {
-            return this._isAuthenticated;
-        },
-        set: function (value) {
-            this.username.value = null;
-            this.password.value = null;
-            if (!value) {
-                this.isLoading = false;
-            }
-            this.isErrorVisible = false;
-            this._isAuthenticated = value;
-            this.application.session.isAuthenticated = value;
-        }
+        value: false
     },
 
     handleSignInAction: {
