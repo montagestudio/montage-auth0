@@ -88,6 +88,7 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
         }
     },
 
+    //TODO, finish implementation with AuthO UI less library
     loginWithCredentials: {
         value: function(username, password) {
             var self = this;
@@ -127,55 +128,6 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
 
                 //Web Lock from CDN
                 //<script src="http://cdn.auth0.com/js/lock/10.7.3/lock.min.js"></script>
-
-                
-                //Direct to MileZero
-                var request = new XMLHttpRequest();
-
-                request.addEventListener("load", function () {
-                    var response;
-
-                    try {
-                        response = JSON.parse(this.responseText);
-                    } catch (error) {
-                        reject("There was a problem connecting to the server. Please try later.");
-                        return;
-                    }
-                    if (response.errors) {
-                        if (response.errors[0] && response.errors[0].code === "401") {
-                            reject("The username and password you have entered are not valid. Please try again.");
-                            return;
-                        }
-                        // TODO: Are there any other kinds of errors? How to handle them?
-                        reject("There was a problem connecting to the server. Please try later.");
-                        return;
-                    }
-                    console.log(response);
-                    response.organizationId = username;
-                    response.organization = {
-                        orgId: username
-                    };
-
-                    //resolve({organizationId: username});
-                    //TEMP fix until autho is sorted out
-                    resolve(response);
-                }, false);
-                console.log("self.connectionDescriptor.http is ",self.connectionDescriptor.http);
-                request.open("POST", self.connectionDescriptor.http+"authenticate?include=organization,hubs.location", true);
-                request.setRequestHeader("Accept", "application/vnd.api+json");
-                request.send(
-                    JSON.stringify({
-                        data: {
-                            type: "authenticate",
-                            attributes: {
-                                username: username
-                            }
-                        }
-                    })
-                );
-
-
-
 
             });
         }
