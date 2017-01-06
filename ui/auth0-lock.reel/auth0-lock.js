@@ -97,6 +97,12 @@ exports.Auth0Lock = AuthorizationPanel.specialize({
                 self.isAuthenticating = false;
             });
         }
+    },
+
+    logout: {
+        value: function() {
+            this._auth0Lock.logout();
+        }
     }
 
     // showError: {
