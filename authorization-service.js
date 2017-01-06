@@ -79,52 +79,53 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
         },
         set: function(value) {
             this._connectionDescriptor = value;
-            if(this._connectionDescriptor.clientId && this._connectionDescriptor.auth0Domain) {
-                this._auth0Lock = new Auth0Lock(
-                    this._connectionDescriptor.clientId,
-                    this._connectionDescriptor.auth0Domain
-                    );
-            }
+            //TODO Revisit when implementing support for UI Less method directly 
+            // if(this._connectionDescriptor.clientId && this._connectionDescriptor.domain) {
+            //     this._auth0 = new Auth0(
+            //         this._connectionDescriptor.clientId,
+            //         this._connectionDescriptor.domain
+            //         );
+            // }
         }
     },
-
+/*
     //TODO, finish implementation with AuthO UI less library
     loginWithCredentials: {
         value: function(username, password) {
             var self = this;
             return new Promise(function(resolve, reject) {
 
-                // //Direct to Auth0
-                // var loadAuth0equest = new XMLHttpRequest();
-                // loadAuth0equest.addEventListener("load", function () {
-                //     eval(this.responseText);
-                //     var auth0 = new Auth0({
-                //         domain: "milezero.auth0.com",
-                //         clientID: "7umULmlCTJr3sOnz5iwpnCXnXc5Le1LC",
-                //         callbackOnLocationHash: true,
-                //         callbackURL: "http://localhost:6789/",
-                //     });
+                //Direct to Auth0
+                var loadAuth0equest = new XMLHttpRequest();
+                loadAuth0equest.addEventListener("load", function () {
+                    eval(this.responseText);
+                    var auth0 = new Auth0({
+                        domain: this._connectionDescriptor.domain,
+                        clientID: this._connectionDescriptor.clientId,
+                        callbackOnLocationHash: true,
+                        callbackURL: this._connectionDescriptor.options.auth.redirectUrl,
+                    });
 
-                //     //http://cdn.auth0.com/w2/auth0-7.6.0.min.js
-                //     //Using Auth0    
-                //     auth0.login({
-                //         connection: 'Username-Password-Authentication',
-                //         responseType: 'token',
-                //         email: username,
-                //         password: password,
-                //     }, function(err, result) {
-                //         if (err) {
-                //             console.log("something went wrong: ",err);
-                //             reject(err);
-                //         } else {
-                //             resolve(result);
-                //         }
-                //     });
+                    //http://cdn.auth0.com/w2/auth0-7.6.0.min.js
+                    //Using Auth0    
+                    auth0.login({
+                        connection: 'Username-Password-Authentication',
+                        responseType: 'token',
+                        email: username,
+                        password: password,
+                    }, function(err, result) {
+                        if (err) {
+                            console.log("something went wrong: ",err);
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
 
-                // });
-                // loadAuth0equest.open("GET", "http://cdn.auth0.com/w2/auth0-7.6.0.min.js", true);
-                // loadAuth0equest.send();
-                // return;
+                });
+                loadAuth0equest.open("GET", "http://cdn.auth0.com/w2/auth0-7.6.0.min.js", true);
+                loadAuth0equest.send();
+                return;
 
                 //Web Lock from CDN
                 //<script src="http://cdn.auth0.com/js/lock/10.7.3/lock.min.js"></script>
@@ -132,4 +133,5 @@ AuthorizationService = exports.AuthorizationService = RawDataService.specialize(
             });
         }
     }
+*/
 });
