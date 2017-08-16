@@ -101,7 +101,10 @@ exports.Auth0Lock = AuthorizationPanel.specialize({
 
     logout: {
         value: function() {
-            this._auth0Lock.logout();
+            // TODO: Make the return address configurable
+            this._auth0Lock.logout({
+                returnTo: window.location.href
+            });
         }
     }
 
