@@ -23,16 +23,19 @@ exports.Auth0Lock = AuthorizationPanel.specialize({
                 connectionDescriptor.options
             );
 
-
-            // Listening for the authenticated event
             auth0Lock.on("authenticated", function(authResult) {
                 // Use the token in authResult to getProfile() and save it to localStorage
                 auth0Lock.getProfile(authResult.idToken, function(error, profile) {
+                    var expiration;
+
                     if (error) {
                         // Handle error
                         throw error;
                         return;
                     }
+
+                    expiration = authResult.idTokenPayload.exp * 1000;
+                    setTimeout(self.logout.bind(self), expiration - Date.now());
 
                     self.authorizationManagerPanel.approveAuthorization(profile);
 
@@ -41,10 +44,7 @@ exports.Auth0Lock = AuthorizationPanel.specialize({
 
                     self.isAuthenticated = true;
                     self.needsDraw = true;
-
                 });
-
-
             });
             this.needsDraw = true;
         }
