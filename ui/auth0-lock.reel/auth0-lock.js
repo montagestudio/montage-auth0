@@ -5,6 +5,7 @@ var AuthorizationPanel = require("montage-data/ui/authorization-panel.reel").Aut
  * @extends AuthorizationPanel
  */
 exports.Auth0Lock = AuthorizationPanel.specialize({
+
     constructor: {
         value: function Auth0Lock() {
             this.super();
@@ -51,9 +52,7 @@ exports.Auth0Lock = AuthorizationPanel.specialize({
 
     draw: {
         value: function() {
-          this.isAuthenticated
-          ? this._auth0Lock.hide()
-          : this._auth0Lock.show();
+            this.isAuthenticated ? this._auth0Lock.hide() : this._auth0Lock.show();
         }
     },
 
@@ -101,9 +100,11 @@ exports.Auth0Lock = AuthorizationPanel.specialize({
 
     logout: {
         value: function() {
-            // TODO: Make the return address configurable
+            var connectionDescriptor = this.dataService.connectionDescriptor,
+                redirectUrl = connectionDescriptor.options && connectionDescriptor.options.auth && connectionDescriptor.options.auth.redirectUrl;
             this._auth0Lock.logout({
-                returnTo: window.location.href
+                returnTo: redirectUrl || window.location.href,
+                client_id: connectionDescriptor.clientId
             });
         }
     }
